@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanmay's Wildlife Quiz Game</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        .incorrect {
+            color: red;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            max-width: 400px;
+            padding: 20px;
+            transition: box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #e9e9e9;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+            padding: 10px;
+            transition: background-color 0.3s;
+        }
+
+        li:hover {
+            background-color: #d9d9d9;
+        }
+
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+
+        #moduleSelection,
+        #quiz,
+        #results {
+            text-align: center;
+        }
+
+        #moduleDropdown,
+        button {
+            background-color: #333;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+            padding: 10px 15px;
+            transition: background-color 0.3s;
+        }
+
+        #moduleDropdown:hover,
+        button:hover {
+            background-color: #555;
+        }
+
+        button {
+            display: inline-block;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <br>
+    <br>
+    <div id="moduleSelection">
+        <label for="moduleDropdown">Select Module:</label>
+        <select id="moduleDropdown"></select>
+        <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <div id="quiz" class="hidden">
+        <h2 id="questionText"></h2>
+        <ul id="optionsList"></ul>
+    </div>
+
+    <div id="results" class="hidden">
+        Your score is: <span id="score"></span>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                "Module": 1,
+                "Data": [
+                    {
+                        "Question": "Which of these is not a characteristic of fitness?",
+                        "Options": [
+                            "Fitness is environment-specific.",
+                            "Fitness is species-specific.",
+                            "Higher reproductive rate means higher fitness.",
+                            "Fitness should be measured across several generations."
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Ecology is the scientific study of interactions among organisms and their ___. (Fill in the blanks)",
+                        "Options": [
+                            "habitat",
+                            "niche",
+                            "environment",
+                            "population"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "\"Enquiry into plants\" is a book written by",
+                        "Options": [
+                            "Theophrastus",
+                            "Linnaeus",
+                            "Malthus",
+                            "Humboldt"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "Which of these is not a kind of selection",
+                        "Options": [
+                            "directional",
+                            "stochastic",
+                            "disruptive",
+                            "stabilising"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Ecology is the scientific study of _______that determine the distribution and abundance of organisms. (Fill in the blanks)",
+                        "Options": [
+                            "statics",
+                            "interactions",
+                            "dynamics",
+                            "habitat"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Which of these is not a step in natural selection?",
+                        "Options": [
+                            "variation",
+                            "underpopulation",
+                            "struggle for existence",
+                            "survival of the fittest"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Which of these is not a characteristic of fitness?",
+                        "Options": [
+                            "Fitness is environment-specific.",
+                            "Fitness is species-specific.",
+                            "Fitness works on traits such as size and speed.",
+                            "Fitness should be measured across several generations."
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "In the Greek word root of Ecology, Oikos refers to",
+                        "Options": [
+                            "household",
+                            "preservation",
+                            "environment",
+                            "study"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "In the Greek word root of Ecology, logos refers to",
+                        "Options": [
+                            "household",
+                            "preservation",
+                            "environment",
+                            "study"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "Who amongst these is considered the father of Biogeography?",
+                        "Options": [
+                            "Theophrastus",
+                            "Linnaeus",
+                            "Malthus",
+                            "Humboldt"
+                        ],
+                        "Correct": 3
+                    }
+                ]
+            },
+            {
+                "Module": 2,
+                "Data": [
+                    {
+                        "Question": "For more diversity, the level of disturbance should be",
+                        "Options": [
+                            "less",
+                            "intermediate",
+                            "more",
+                            "none of these"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Hierarchy emerges almost inevitably through a wide variety of evolutionary processes, for the simple reason that hierarchical structures are _____ (fill in the blank)",
+                        "Options": [
+                            "perfect",
+                            "imperfect",
+                            "stable",
+                            "unstable"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "\"Groups of actually or potentially interbreeding natural populations which are reproductively isolated from other such groups\" is a definition of",
+                        "Options": [
+                            "cells",
+                            "species",
+                            "ecosystems",
+                            "biomes"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "The emergent principle can be stated as",
+                        "Options": [
+                            "whole = sum of parts",
+                            "whole < sum of parts",
+                            "whole > sum of parts",
+                            "none of these"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "There is more biodiversity in areas with",
+                        "Options": [
+                            "less competition, less predation",
+                            "less competition, more predation",
+                            "more competition, more predation",
+                            "more competition, less predation"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "The mitochondrion is a/an",
+                        "Options": [
+                            "subcellular organelle",
+                            "cell",
+                            "tissue",
+                            "organ"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "\"The diversity that exists among different geographies\" is",
+                        "Options": [
+                            "alpha biodiversity",
+                            "beta biodiversity",
+                            "gamma biodiversity",
+                            "delta biodiversity"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "\"The diversity that exists within an ecosystem\" is",
+                        "Options": [
+                            "alpha biodiversity",
+                            "beta biodiversity",
+                            "gamma biodiversity",
+                            "delta biodiversity"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "The hierarchical system was given by",
+                        "Options": [
+                            "Simon",
+                            "Watson",
+                            "Hutchinson",
+                            "Humboldt"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "The laboratory approach to ecology uses",
+                        "Options": [
+                            "equations",
+                            "models",
+                            "observations",
+                            "experiments"
+                        ],
+                        "Correct": 3
+                    }
+                ]
+            },
+            {
+                "Module": 3,
+                "Data": [
+                    {
+                        "Question": "I observe a bird take a tick out of another bird's head and eat it. In the social context, this behavior is known as",
+                        "Options": [
+                            "tick hunting",
+                            "auto grooming",
+                            "allo grooming",
+                            "foraging"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "The scientific study of animal behavior is known as",
+                        "Options": [
+                            "behaviourism",
+                            "ecology",
+                            "ethology",
+                            "prey-predator dynamics"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Trampling of grass due to the movement of animals is an example of",
+                        "Options": [
+                            "mutualism",
+                            "amensalism",
+                            "commensalism",
+                            "protocooperation"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Birds on a giraffe is an example of",
+                        "Options": [
+                            "colony",
+                            "commensalism",
+                            "protocooperation",
+                            "allelopathy"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "I observe a monkey take a tick out of another monkey's head and eat it. In the social context, this behavior would be called",
+                        "Options": [
+                            "tick hunting",
+                            "auto grooming",
+                            "allo grooming",
+                            "foraging"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Hamilton's rule can be stated as",
+                        "Options": [
+                            "rB < C",
+                            "rB > C",
+                            "rB = C",
+                            "rB + C = 0"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Egrets with buffaloes are an example of",
+                        "Options": [
+                            "colony",
+                            "commensalism",
+                            "protocooperation",
+                            "allelopathy"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "The interaction between exotic shrubs and trees through the action of seed predators is an example of",
+                        "Options": [
+                            "intraspecific competition",
+                            "apparent competition",
+                            "disguised competition",
+                            "harmonious competition"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Harmonious interaction occurs where",
+                        "Options": [
+                            "at least one participant is benefited",
+                            "at least one participant is unharmed",
+                            "both participants are benefited",
+                            "both participants are unharmed"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "An inventory of behaviors exhibited by an animal during a behavior exercise is called",
+                        "Options": [
+                            "ecogram",
+                            "ethogram",
+                            "behaviourogram",
+                            "animalogram"
+                        ],
+                        "Correct": 1
+                    }
+                ]
+            },
+            {
+                "Module": 4,
+                "Data": [
+                    {
+                        "Question": "Tree --> Frugivorous birds --> Hawk represents",
+                        "Options": [
+                            "Upright pyramid of numbers",
+                            "Inverted pyramid of numbers",
+                            "Spindle pyramid of numbers",
+                            "Dumbbell pyramid of numbers"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "If we all became vegetarians, we'll be able to support our large populations. This can be explained through",
+                        "Options": [
+                            "10% rule",
+                            "1% rule",
+                            "Trophic cascade",
+                            "Biodiversity"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "Consider the food chain: Grass --> Grasshopper --> Frog --> Snake --> Hawk. As we move up the food chain,",
+                        "Options": [
+                            "Available energy decreases",
+                            "Available energy increases",
+                            "Available energy remains the same",
+                            "Available energy is zero everywhere"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "Glacial lakes are typical examples of",
+                        "Options": [
+                            "Eutrophic lakes",
+                            "Hypereutrophic lakes",
+                            "Oligotrophic lakes",
+                            "Mesotrophic lakes"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Trees --> Birds --> Parasites --> Hyperparasites represents",
+                        "Options": [
+                            "Upright pyramid of numbers",
+                            "Inverted pyramid of numbers",
+                            "Spindle pyramid of numbers",
+                            "Dumbbell pyramid of numbers"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Consider the food chain: Grass --> Grasshopper --> Frog --> Snake --> Hawk. In the food chain,",
+                        "Options": [
+                            "Frog is a consumer and carnivore",
+                            "Frog is a consumer and herbivore",
+                            "Frog is a producer",
+                            "Frog is a decomposer"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "At the compensation point",
+                        "Options": [
+                            "Photosynthesis = Respiration",
+                            "Photosynthesis < Respiration",
+                            "Photosynthesis > Respiration",
+                            "Photosynthesis = 0"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "Consider the food chain: Grass --> Grasshopper --> Frog --> Snake --> Hawk. In this food chain,",
+                        "Options": [
+                            "More number of grasshoppers than hawks can be supported",
+                            "More number of hawks than grasshoppers can be supported",
+                            "Equal number of hawks and grasshoppers can be supported",
+                            "None of these"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Consider the food chain: Grass --> Grasshopper --> Frog --> Snake --> Hawk. In this food chain,",
+                        "Options": [
+                            "Hawk is a consumer and carnivore",
+                            "Hawk is a consumer and herbivore",
+                            "Hawk is a producer",
+                            "Hawk is a decomposer"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "Net primary productivity is given by",
+                        "Options": [
+                            "APAR X LUE",
+                            "APAR + LUE",
+                            "APAR - LUE",
+                            "APAR / LUE"
+                        ],
+                        "Correct": 0
+                    }
+                ]
+            },
+            {
+                "Module": 5,
+                "Data": [
+                    {
+                        "Question": "Which of these is not a measure of absolute population density?",
+                        "Options": [
+                            "Total count",
+                            "Pelt count",
+                            "Capture-recapture method",
+                            "Removal method"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "The juvenile mortality rate is the annual number of deaths of juveniles per",
+                        "Options": [
+                            "100 births",
+                            "1000 births",
+                            "100 live births",
+                            "1000 live births"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "____ is how close the measured values are to the correct values",
+                        "Options": [
+                            "Accuracy",
+                            "Precision",
+                            "Bias",
+                            "Variance"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "____ employs a simple rule of selecting every kth unit starting with a number chosen at random from 1 to k as the random start",
+                        "Options": [
+                            "Simple random sampling",
+                            "Systematic sampling",
+                            "Stratified sampling",
+                            "Multistage sampling"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Cover board surveys are typically used for sampling",
+                        "Options": [
+                            "Herpetofauna",
+                            "Fishes",
+                            "Large mammals",
+                            "Carnivores"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "The minimum replacement level fertility for a population to grow should be greater than",
+                        "Options": [
+                            "1",
+                            "2",
+                            "3",
+                            "4"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "The logistic growth curve, when plotted, appears",
+                        "Options": [
+                            "I shaped",
+                            "J shaped",
+                            "S shaped",
+                            "O shaped"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Pan traps are used for sampling",
+                        "Options": [
+                            "Bees",
+                            "Butterflies",
+                            "Non-pollinator insects",
+                            "Pollinator insects"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "A sampling procedure such that each possible combination of sampling units out of the population has the same chance of being selected is referred to as",
+                        "Options": [
+                            "Simple random sampling",
+                            "Systematic sampling",
+                            "Stratified sampling",
+                            "Multistage sampling"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "Which of these is true?",
+                        "Options": [
+                            "Physiological longevity > Ecological longevity",
+                            "Physiological longevity = Ecological longevity",
+                            "Physiological longevity < Ecological longevity",
+                            "A or B"
+                        ],
+                        "Correct": 3
+                    }
+                ]
+            },
+            {
+                "Module": 6,
+                "Data": [
+                    {
+                        "Question": "Importance value varies from",
+                        "Options": [
+                            "0 to 10",
+                            "0 to 50",
+                            "0 to 100",
+                            "0 to 300"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "A species found most frequently in a particular community, but also present occasionally in others is called",
+                        "Options": [
+                            "Accidental species",
+                            "Indifferent species",
+                            "Selective species",
+                            "Exclusive species"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Which of these depicts correctly the lithosere primary succession?",
+                        "Options": [
+                            "Rock --> Crustose lichen --> Foliose lichen --> Moss --> Herbaceous stage --> Shrub --> Woodland --> Climax",
+                            "Rock --> Foliose lichen --> Crustose lichen --> Moss --> Herbaceous stage --> Shrub --> Woodland --> Climax",
+                            "Moss --> Crustose lichen --> Foliose lichen --> Rock --> Herbaceous stage --> Shrub --> Woodland --> Climax",
+                            "Rock --> Crustose lichen --> Foliose lichen --> Shrub --> Herbaceous stage --> Moss --> Woodland --> Climax"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "Importance value can be written as",
+                        "Options": [
+                            "Relative density + Relative frequency X Relative dominance",
+                            "Relative density X Relative frequency + Relative dominance",
+                            "Relative density + Relative frequency + Relative dominance",
+                            "Relative density X Relative frequency X Relative dominance"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Lithosere is an example of",
+                        "Options": [
+                            "Hydrosere",
+                            "Xerosere",
+                            "Psammosere",
+                            "Halosere"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "The climax near Tindi village is being controlled by disturbance by cattle. This is an example of",
+                        "Options": [
+                            "Climatic climax",
+                            "Edaphic climax",
+                            "Disclimax",
+                            "Catastrophic climax"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "A climax caused by wildfires is an example of",
+                        "Options": [
+                            "Climatic climax",
+                            "Edaphic climax",
+                            "Disclimax",
+                            "Catastrophic climax"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "Which of these is correct?",
+                        "Options": [
+                            "Fundamental niche > Realized niche",
+                            "Fundamental niche = Realized niche",
+                            "Fundamental niche < Realized niche",
+                            "A or B"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "When compared to generalist species, specialist species have",
+                        "Options": [
+                            "Narrower niche",
+                            "Broader niche",
+                            "Same size niche",
+                            "None of these"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "Which of these is not a characteristic of pioneer species",
+                        "Options": [
+                            "Ability to grow on bare rocks",
+                            "Ability to tolerate extreme temperatures",
+                            "Large size",
+                            "Short life span"
+                        ],
+                        "Correct": 2
+                    }
+                ]
+            },
+            {
+                "Module": 7,
+                "Data": [
+                    {
+                        "Question": "Scarcity of food is a",
+                        "Options": [
+                            "Chemical factor",
+                            "Demographic factor",
+                            "Push factor",
+                            "Pull factor"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Good climate is a",
+                        "Options": [
+                            "Chemical factor",
+                            "Demographic factor",
+                            "Push factor",
+                            "Pull factor"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "The movement of individuals away from their place of birth or hatching or seed production into a new habitat or area to survive and reproduce is called",
+                        "Options": [
+                            "Translocation",
+                            "Migration",
+                            "Dispersal",
+                            "Drifting"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "\"The geographical distribution of a species will be controlled by that environmental factor for which the organism has the narrowest range of tolerance.\" This is the statement for",
+                        "Options": [
+                            "Liebig\u2019s law of the minimum",
+                            "Liebig\u2019s law of the maximum",
+                            "Shelford\u2019s law of tolerance",
+                            "Shelford\u2019s law of intolerance"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "\"Quick movement over large distances, often across unsuitable terrain\" is a description of",
+                        "Options": [
+                            "Diffusion",
+                            "Secular dispersal",
+                            "Jump dispersal",
+                            "Drifting"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "The regular, seasonal movement of animals, often along fixed routes is called",
+                        "Options": [
+                            "Translocation",
+                            "Migration",
+                            "Dispersal",
+                            "Drifting"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "The movement of lions across the Gir landscape is an example of",
+                        "Options": [
+                            "Diffusion",
+                            "Secular dispersal",
+                            "Jump dispersal",
+                            "Drifting"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "Which of these is not a physical factor of habitat?",
+                        "Options": [
+                            "Soil",
+                            "Moisture",
+                            "Predators",
+                            "Temperature"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Transplantation experiments are used to find",
+                        "Options": [
+                            "Potential range",
+                            "Effective range",
+                            "Actual range",
+                            "Economic range"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "I tried growing vegetables under my teak plantation, but the vegetable plants died out. I should be concerned about",
+                        "Options": [
+                            "Autophagy",
+                            "Allelophagy",
+                            "Autopathy",
+                            "Allelopathy"
+                        ],
+                        "Correct": 3
+                    }
+                ]
+            },
+            {
+                "Module": 8,
+                "Data": [
+                    {
+                        "Question": "Captive breeding is an example of",
+                        "Options": [
+                            "In-situ conservation",
+                            "Ex-situ conservation",
+                            "In-situ preservation",
+                            "Ex-situ preservation"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "The \"subset of physical and biotic environmental factors that permit an animal (or plant) to survive and reproduce\" is the definition of",
+                        "Options": [
+                            "Habitat",
+                            "Ecosystem",
+                            "Biome",
+                            "Biosphere"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "We prefer those areas for the creation of a conservation reserve where the level of threat is",
+                        "Options": [
+                            "Very high",
+                            "Medium",
+                            "Very low",
+                            "Non-existent"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Which of these is a deterministic factor",
+                        "Options": [
+                            "Environmental variation",
+                            "Forest fire",
+                            "Death rate",
+                            "Diseases"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "The acronym HIPPO does not include",
+                        "Options": [
+                            "Habitat loss",
+                            "Habitat enhancement",
+                            "Invasive species",
+                            "Human overpopulation"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Which of these correctly represents the process of habitat fragmentation and loss",
+                        "Options": [
+                            "Original forest --> Dissection --> Perforation --> Fragmentation --> Attrition",
+                            "Original forest --> Dissection --> Attrition --> Fragmentation --> Perforation",
+                            "Original forest --> Dissection --> Perforation --> Attrition --> Fragmentation",
+                            "Original forest --> Dissection --> Fragmentation --> Perforation --> Attrition"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "The acronym HIPPO does not include",
+                        "Options": [
+                            "Habitat loss",
+                            "Invasive species",
+                            "Pollination",
+                            "Pollution"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Which of these is a stochastic factor",
+                        "Options": [
+                            "Birth rate",
+                            "Death rate",
+                            "Population structures",
+                            "Environmental fluctuations"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "According to Leopold, which of these is not a tool of habitat management",
+                        "Options": [
+                            "Fire",
+                            "Gun",
+                            "Cattle",
+                            "Sickle"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "Zoo is an example of",
+                        "Options": [
+                            "In-situ conservation",
+                            "Ex-situ conservation",
+                            "In-situ preservation",
+                            "Ex-situ preservation"
+                        ],
+                        "Correct": 1
+                    }
+                ]
+            },
+            {
+                "Module": 9,
+                "Data": [
+                    {
+                        "Question": "Which of these is a preventive check according to Malthus?",
+                        "Options": [
+                            "Foresight",
+                            "Vice",
+                            "Misery",
+                            "Flood"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "Which of these is not a pillar of sustainability?",
+                        "Options": [
+                            "Environmental sustainability",
+                            "Economic sustainability",
+                            "Trans-boundary sustainability",
+                            "Social sustainability"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "____ is to identify which potential impacts are relevant to assess (fill in the blank)",
+                        "Options": [
+                            "Screening",
+                            "Scoping",
+                            "Reporting",
+                            "Review"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Which of these is a positive check according to Malthus?",
+                        "Options": [
+                            "Late marriage",
+                            "War",
+                            "Celibacy",
+                            "Moral restraint"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Which of these is a pillar of sustainability?",
+                        "Options": [
+                            "Social sustainability",
+                            "Industrial sustainability",
+                            "Agricultural sustainability",
+                            "Trans-boundary sustainability"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "The demographic transition sees a society move from",
+                        "Options": [
+                            "High birth rate, low death rate to low birth rate, low death rate",
+                            "Low birth rate, high death rate to low birth rate, low death rate",
+                            "High birth rate, high death rate to low birth rate, low death rate",
+                            "High birth rate, high death rate to low birth rate, high death rate"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "The book \"An Essay on the Principle of Population\" was written by",
+                        "Options": [
+                            "Darwin",
+                            "Malthus",
+                            "Spencer",
+                            "Owens"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "The quantum of human impacts is given by",
+                        "Options": [
+                            "I = P X A X T",
+                            "I = P + A + T",
+                            "I = P + A - T",
+                            "I = P - (A + T)"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "____ determines which projects or development require a full or partial impact assessment study (fill in the blank)",
+                        "Options": [
+                            "Screening",
+                            "Scoping",
+                            "Reporting",
+                            "Review"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "According to Malthusian model",
+                        "Options": [
+                            "Population grows in geometric progression, food supply increases in arithmetic progression",
+                            "Population grows in geometric progression, food supply increases in geometric progression",
+                            "Population grows in arithmetic progression, food supply increases in arithmetic progression",
+                            "Population grows in arithmetic progression, food supply increases in geometric progression"
+                        ],
+                        "Correct": 0
+                    }
+                ]
+            },
+            {
+                "Module": 10,
+                "Data": [
+                    {
+                        "Question": "Mesodebris in the context of plastic debris has fragments of size",
+                        "Options": [
+                            ">20mm",
+                            "5-20mm",
+                            "<5mm",
+                            "<1mm"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "The government came up with a regulation that incandescent bulbs be replaced by LED bulbs, so that electricity consumption and release of carbon dioxide from power plants is reduced. In the context of change, such an action would be called",
+                        "Options": [
+                            "Adaptation",
+                            "Mitigation",
+                            "Deceleration",
+                            "Maladaptation"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Which of these is not a climatic forcing for Earth?",
+                        "Options": [
+                            "Changes in plate tectonics",
+                            "Changes in Earth's orbit",
+                            "Changes in the Moon's orbit",
+                            "Changes in the Sun's orbit"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Which of these is not a principle of ecological restoration?",
+                        "Options": [
+                            "Ecological integrity",
+                            "Long-term sustainability",
+                            "Benefits and engages scientists",
+                            "Informed by past and future"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "\"The ability of a system to adjust to climate change (including climate variability and extremes) to moderate potential damages, to take advantage of opportunities, or to cope with the consequences\" is a definition for",
+                        "Options": [
+                            "Adaptive response",
+                            "Adaptive capacity",
+                            "Mitigative response",
+                            "Mitigative capacity"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Which of these is not a principle of ecological restoration?",
+                        "Options": [
+                            "Ecological integrity",
+                            "Short-term sustainability",
+                            "Benefits and engages society",
+                            "Informed by past and future"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Macrodebris in the context of plastic debris has fragments of size",
+                        "Options": [
+                            ">20mm",
+                            "5-20mm",
+                            "<5mm",
+                            "<1mm"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "Because of climate change, Mudumalai Tiger Reserve is suffering from frequent droughts. The management has built several artificial water holes for animals and fills them up regularly with tankers. In the context of climate change, such an action would be called",
+                        "Options": [
+                            "Adaptation",
+                            "Mitigation",
+                            "Deceleration",
+                            "Maladaptation"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "\"Any changes in natural and human systems that inadvertently increase vulnerability to climatic stimuli; an adaptation that does not succeed in reducing vulnerability but increases it instead\" is a definition for",
+                        "Options": [
+                            "Adaptation",
+                            "Mitigation",
+                            "Maladaptation",
+                            "Malmitigation"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Which of these is not a climatic forcing for Earth?",
+                        "Options": [
+                            "Changes in plate tectonics",
+                            "Changes in Earth's orbit",
+                            "Changes in the Sun's orbit",
+                            "Changes in Sun's strength"
+                        ],
+                        "Correct": 3
+                    }
+                ]
+            },
+            {
+                "Module": 11,
+                "Data": [
+                    {
+                        "Question": "A pest population is called uncontrolled when",
+                        "Options": [
+                            "It is increasing",
+                            "It is not decreasing",
+                            "It is causing some economic damage",
+                            "It is causing excessive economic damage"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "The impact of El Nino on fishery collapse in Peru is explained by",
+                        "Options": [
+                            "Match hypothesis",
+                            "Mismatch hypothesis",
+                            "Match-mismatch hypothesis",
+                            "None of these"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Which of these is correct",
+                        "Options": [
+                            "R + G = M + F",
+                            "R + M = G + F",
+                            "R + F + M + G",
+                            "R + G + M + F = 0"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "Ludwig's ratchet predicts",
+                        "Options": [
+                            "Decreasing harvesting rate",
+                            "Constant harvesting rate",
+                            "Increasing harvesting rate",
+                            "Fluctuating harvesting rate"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "A root zone treatment plant is an example of",
+                        "Options": [
+                            "Phytoremediation",
+                            "Biological control",
+                            "Biomagnification",
+                            "Bioaccumulation"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "A pest population is called controlled when",
+                        "Options": [
+                            "It is increasing",
+                            "It is decreasing",
+                            "It is not causing any economic damage",
+                            "It is not causing excessive economic damage"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "A deciduous forest in Madhya Pradesh was converted into a mine. After the mining operations were over, the pits were filled up with water and a lake was created. It is now visited by several migratory birds. This is an example of",
+                        "Options": [
+                            "Recovery",
+                            "Restoration",
+                            "Enhancement",
+                            "Replacement"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "A deciduous forest in Madhya Pradesh was converted into a mine. After the mining operations were over, the pits were filled up with soil and species of deciduous forest planted again. This is an example of",
+                        "Options": [
+                            "Recovery",
+                            "Restoration",
+                            "Enhancement",
+                            "Replacement"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Which of these is not an impact of toxic chemicals",
+                        "Options": [
+                            "Lethal effects",
+                            "Sub-lethal effects",
+                            "Reduction of existing stressors",
+                            "Reduce fecundity"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Which of these is correct",
+                        "Options": [
+                            "The maximum sustainable yield is near the beginning of sigmoid curve",
+                            "The maximum sustainable yield is near the mid-point of sigmoid curve",
+                            "The maximum sustainable yield is near the end of sigmoid curve",
+                            "None of these"
+                        ],
+                        "Correct": 1
+                    }
+                ]
+            },
+            {
+                "Module": 12,
+                "Data": [
+                    {
+                        "Question": "Hierarchy emerges almost inevitably through a wide variety of evolutionary processes, for the simple reason that hierarchical structures are _____",
+                        "Options": [
+                            "Perfect",
+                            "Imperfect",
+                            "Stable",
+                            "Unstable"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Which of these is a stochastic factor",
+                        "Options": [
+                            "Birth rate",
+                            "Death rate",
+                            "Population structure",
+                            "Environmental fluctuation"
+                        ],
+                        "Correct": 3
+                    },
+                    {
+                        "Question": "The climax near Tindi village is being controlled by disturbance by cattle. This is an example of",
+                        "Options": [
+                            "Climatic climax",
+                            "Edaphic climax",
+                            "Disclimax",
+                            "Catastrophic climax"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "_____ determines which projects or developments require a full or partial impact assessment study",
+                        "Options": [
+                            "Screening",
+                            "Scoping",
+                            "Reporting",
+                            "Review"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "The movement of lions across the Gir landscape is an example of",
+                        "Options": [
+                            "Diffusion",
+                            "Secular dispersal",
+                            "Jump dispersal",
+                            "Drifting"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "Trampling of grass due to the movement of animals is an example of",
+                        "Options": [
+                            "Mutualism",
+                            "Amensalism",
+                            "Commensalism",
+                            "Protocooperation"
+                        ],
+                        "Correct": 1
+                    },
+                    {
+                        "Question": "Cover board surveys are typically used for sampling",
+                        "Options": [
+                            "Herpetofauna",
+                            "Fishes",
+                            "Large mammals",
+                            "Carnivores"
+                        ],
+                        "Correct": 0
+                    },
+                    {
+                        "Question": "Glacial lakes are typical examples of",
+                        "Options": [
+                            "Eutrophic lakes",
+                            "Hypereutrophic lakes",
+                            "Oligotrophic lakes",
+                            "Mesotrophic lakes"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Which of these is not a climatic forcing for Earth",
+                        "Options": [
+                            "Change in plates tectonics",
+                            "Change in Earth's orbit",
+                            "Change in Sun's orbit",
+                            "Change in Sun's strength"
+                        ],
+                        "Correct": 2
+                    },
+                    {
+                        "Question": "Which of these is not a characteristic of fitness",
+                        "Options": [
+                            "Fitness is environmental specific",
+                            "Fitness is species specific",
+                            "Higher reproductive rate means higher fitness",
+                            "Fitness should be measured across several generations"
+                        ],
+                        "Correct": 0
+                    }
+                ]
+            }
+        ]
+
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        let currentModule = null;
+        let currentQuestion = null;
+        let correctAnswers = 0;
+
+        function populateModuleDropdown() {
+            const dropdown = document.getElementById("moduleDropdown");
+            quizData.forEach((module, index) => {
+                const option = document.createElement("option");
+                option.value = index;
+                option.textContent = `Module ${module.Module}`;
+                dropdown.appendChild(option);
+            });
+        }
+
+        function startQuiz() {
+            const selectedIndex = document.getElementById("moduleDropdown").value;
+            currentModule = quizData[selectedIndex].Data.slice();
+            shuffle(currentModule);
+            document.getElementById("moduleSelection").classList.add("hidden");
+            document.getElementById("quiz").classList.remove("hidden");
+            loadNextQuestion();
+        }
+
+        function loadNextQuestion() {
+            if (currentModule.length) {
+                currentQuestion = currentModule.shift();
+                displayQuestion(currentQuestion);
+            } else {
+                endQuiz();
+            }
+        }
+
+        function displayQuestion(question) {
+            const questionText = document.getElementById("questionText");
+            const optionsList = document.getElementById("optionsList");
+
+            questionText.textContent = question.Question;
+            optionsList.innerHTML = "";
+
+            const shuffledOptions = question.Options.slice();
+            shuffle(shuffledOptions);
+
+            shuffledOptions.forEach((option) => {
+                const li = document.createElement("li");
+                const optionIndex = question.Options.indexOf(option);
+                li.innerHTML = `<span data-option-index="${optionIndex}">${option}</span>`;
+                optionsList.appendChild(li);
+            });
+
+            optionsList.onclick = function (event) {
+                const clickedOption = event.target;
+                if (clickedOption && clickedOption.getAttribute("data-option-index")) {
+                    const selectedOptionIndex = parseInt(clickedOption.getAttribute("data-option-index"));
+                    if (selectedOptionIndex === question.Correct) {
+                        correctAnswers++;
+                        clickedOption.classList.add("correct");
+                        currentQuestion.correctCount++;
+                        if (currentQuestion.correctCount < 2) {
+                            currentModule.push(currentQuestion);
+                            shuffle(currentModule);
+                        }
+                    } else {
+                        clickedOption.classList.add("incorrect");
+                        const correctOptionIndex = shuffledOptions.indexOf(question.Options[question.Correct]);
+                        optionsList.children[correctOptionIndex].firstChild.classList.add("correct");
+                        currentModule.push(currentQuestion);
+                        shuffle(currentModule);
+                    }
+                    setTimeout(loadNextQuestion, 2000);
+                }
+            };
+        }
+
+        function endQuiz() {
+            document.getElementById("results").classList.remove("hidden");
+            document.getElementById("score").textContent = `${correctAnswers} correct answers`;
+        }
+
+        populateModuleDropdown();
+    </script>
+</body>
+
+</html>
